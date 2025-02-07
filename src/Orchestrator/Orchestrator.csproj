@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Orchestrator.Contracts\Orchestrator.Contracts.csproj" />
+      <ProjectReference Include="..\Push.Contracts\Push.Contracts.csproj" />
+      <ProjectReference Include="..\Sms.Contracts\Sms.Contracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="StateMachine\Cloud\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" Version="2.8.0" />
+      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.3.6" />
+      <PackageReference Include="MassTransit.Kafka" Version="8.3.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.12">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+      <PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.1" />
+      <PackageReference Include="Quartz.Serialization.SystemTextJson" Version="3.13.1" />
+    </ItemGroup>
+
+</Project>
