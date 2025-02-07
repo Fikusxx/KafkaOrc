@@ -1,7 +1,7 @@
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
-using Push.Contracts;
+using Orchestrator.StateMachine.Core;
 
 namespace Orchestrator.StateMachine.ActivitiesByEvent.CascadingCommunicationRequested;
 
@@ -14,15 +14,15 @@ internal sealed class SendPushCommandActivity
     public SendPushCommandActivity(ILogger<SendPushCommandActivity> logger,
         ITopicProducer<long, SendPushCommand> producer)
     {
-        _logger = logger;
-        _producer = producer;
+        this._logger = logger;
+        this._producer = producer;
     }
 
     public void Probe(ProbeContext context) => context.CreateScope(nameof(SendPushCommandActivity));
 
     public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
 
-    public Task Execute(BehaviorContext<CascadingCommunicationState, CascadingCommunicationRequestedEvent> context,
+    public async Task Execute(BehaviorContext<CascadingCommunicationState, CascadingCommunicationRequestedEvent> context,
         IBehavior<CascadingCommunicationState, CascadingCommunicationRequestedEvent> next)
     {
         _logger.LogInformation("Sending {CommandName} for {CommunicationId}.",
@@ -40,7 +40,9 @@ internal sealed class SendPushCommandActivity
             TransactionLink = context.Message.PushData.TransactionLink,
         };
 
-        return _producer.Produce(command.PushId, command);
+        await _producer.Produce(command.PushId, command);
+        
+        await next.Execute(context);
     }
 
     public async Task Faulted<TException>(

@@ -13,17 +13,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="StateMachine\Cloud\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" Version="2.8.0" />
       <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.3.6" />
       <PackageReference Include="MassTransit.Kafka" Version="8.3.6" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.12">
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
       <PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.1" />
       <PackageReference Include="Quartz.Serialization.SystemTextJson" Version="3.13.1" />

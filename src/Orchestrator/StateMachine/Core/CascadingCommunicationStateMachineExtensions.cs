@@ -3,7 +3,7 @@ using Orchestrator.Contracts;
 using Push.Contracts;
 using Sms.Contracts;
 
-namespace Orchestrator.StateMachine;
+namespace Orchestrator.StateMachine.Core;
 
 internal static class CascadingCommunicationStateMachineExtensions
 {

@@ -1,6 +1,6 @@
 using MassTransit;
 
-namespace Orchestrator.StateMachine;
+namespace Orchestrator.StateMachine.Core;
 
 /// <summary>
 /// CascadingCommunicationStateMachine state.

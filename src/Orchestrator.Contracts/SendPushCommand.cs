@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Push.Contracts;
+namespace Orchestrator.Contracts;
 
 public sealed record SendPushCommand
 {

@@ -12,15 +12,15 @@ public sealed record CascadingCommunicationCompletedEvent
     
     /// <summary>
     /// If Cascading Communication completed successfully
-    /// TODO add json prop name
+    /// TODO update json prop name
     /// </summary>
-    [JsonPropertyName("???")]
+    [JsonPropertyName("success")]
     public required bool Success { get; init; }
     
     /// <summary>
     /// Which channel Cascading Communication was delivered with, if any
-    /// TODO add json prop name
+    /// TODO update json prop name
     /// </summary>
-    [JsonPropertyName("???")]
+    [JsonPropertyName("delivery_channel")]
     public required int DeliveryChannel { get; init; }
 }

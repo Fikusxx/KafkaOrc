@@ -1,7 +1,8 @@
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
-using Orchestrator.StateMachine.Jobs;
+using Orchestrator.StateMachine.Core;
+using Orchestrator.StateMachine.Scheduler.Jobs;
 using Quartz;
 
 namespace Orchestrator.StateMachine.ActivitiesByEvent.CascadingCommunicationRequested;
@@ -26,7 +27,7 @@ internal sealed class SendPushDeliveryTimeoutEventActivity
         IBehavior<CascadingCommunicationState, CascadingCommunicationRequestedEvent> next)
     {
         _logger.LogInformation("Scheduling {EventName} for {CommunicationId}.",
-            nameof(PushSendTimeoutEvent), context.Saga.CommunicationId);
+            nameof(PushDeliveryTimeoutEvent), context.Saga.CommunicationId);
 
         var dataMap = new JobDataMap
         {
@@ -37,7 +38,7 @@ internal sealed class SendPushDeliveryTimeoutEventActivity
             .ForJob(SendPushDeliveryTimeoutEventJob.JobKey)
             .WithIdentity($"push.delivery.timeout.{context.Saga.CommunicationId}")
             .UsingJobData(dataMap)
-            .StartAt(DateBuilder.FutureDate(context.Saga.PushSendTimeoutSeconds, IntervalUnit.Second))
+            .StartAt(DateBuilder.FutureDate(context.Saga.PushDeliveryTimeoutSeconds, IntervalUnit.Second))
             .Build();
 
         var scheduler = await _factory.GetScheduler();

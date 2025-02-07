@@ -1,6 +1,7 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Orchestrator.StateMachine.Core;
 
 namespace Orchestrator.StateMachine.Database;
 

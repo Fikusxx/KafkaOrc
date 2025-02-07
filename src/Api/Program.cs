@@ -1,49 +1,125 @@
-using Api;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
+using Orchestrator;
+using Orchestrator.Contracts;
+using Push.Contracts;
+using Sms.Contracts;
+
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+// TODO add yaml support
 
-// Configure the HTTP request pipeline.
+builder.Services.AddInfrastructure(builder.Configuration);
+
+var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// TODO add health checks 
 
-var summaries = new[]
+app.MapGet("communication.requested", async (
+    [FromQuery] long id,
+    [FromServices] ITopicProducer<long, CascadingCommunicationRequestedEvent> producer) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
+    // var cloudEventProducer = provider.GetProducer<long, CloudEvent>(new Uri("topic:start"));
+    var @event = new CascadingCommunicationRequestedEvent
     {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+        CommunicationId = id,
+        PushDeliveryTimeoutSeconds = 30,
+        PushData = new PushData
+        {
+            Body = "Push data",
+            Title = "Push title",
+            Type = "pohui",
+            ClientCode = "123",
+            SecondsToLive = 60
+        },
+        SmsData = new SmsData
+        {
+            Priority = 1,
+            Text = "Sms data",
+            Title = "Sms title",
+            To = 79092970565
+        }
+    };
 
-app.Run();
+    await producer.Produce(@event.CommunicationId, @event);
+    
+    return Results.Ok();
+});
 
-namespace Api
+app.MapGet("push.send", async (
+    [FromQuery] long id,
+    [FromQuery] int deliveryStatus,
+    [FromServices] ITopicProducer<long, PushSendEvent> producer) =>
 {
-    record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+    var @event = new PushSendEvent
     {
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-}
+        PushId = id,
+        ExternalId = "123",
+        DeliveryStatus = deliveryStatus
+    };
+
+    await producer.Produce(@event.PushId, @event);
+    
+    return Results.Ok();
+});
+
+app.MapGet("push.delivery", async (
+    [FromQuery] long id,
+    [FromQuery] int deliveryStatus,
+    [FromServices] ITopicProducer<long, PushDeliveryEvent> producer) =>
+{
+    var @event = new PushDeliveryEvent
+    {
+        PushId = id,
+        CompletedAt = "pohui",
+        DeliveryStatus = deliveryStatus
+    };
+
+    await producer.Produce(@event.PushId, @event);
+    
+    return Results.Ok();
+});
+
+app.MapGet("sms.send", async (
+    [FromQuery] long id,
+    [FromQuery] int deliveryStatus,
+    [FromServices] ITopicProducer<long, SmsSendEvent> producer) =>
+{
+    var @event = new SmsSendEvent
+    {
+        SmsId = id,
+        ExternalId = "123",
+        DeliveryStatus = deliveryStatus
+    };
+
+    await producer.Produce(@event.SmsId, @event);
+    
+    return Results.Ok();
+});
+
+app.MapGet("sms.delivery", async (
+    [FromQuery] long id,
+    [FromQuery] int deliveryStatus,
+    [FromServices] ITopicProducer<long, SmsDeliveryEvent> producer) =>
+{
+    var @event = new SmsDeliveryEvent
+    {
+        SmsId = id,
+        CompletedAt = "pohui",
+        DeliveryStatus = deliveryStatus
+    };
+
+    await producer.Produce(@event.SmsId, @event);
+    
+    return Results.Ok();
+});
+
+await app.RunAsync();

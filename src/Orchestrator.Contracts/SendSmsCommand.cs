@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Sms.Contracts;
+namespace Orchestrator.Contracts;
 
 public sealed record SendSmsCommand
 {

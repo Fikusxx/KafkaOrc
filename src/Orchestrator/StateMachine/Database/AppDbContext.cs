@@ -5,7 +5,7 @@ namespace Orchestrator.StateMachine.Database;
 
 internal sealed class AppDbContext : SagaDbContext
 {
-    public AppDbContext(DbContextOptions options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
 

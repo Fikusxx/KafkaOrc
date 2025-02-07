@@ -1,8 +1,8 @@
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
-using Orchestrator.StateMachine.Jobs;
-using Push.Contracts;
+using Orchestrator.StateMachine.Core;
+using Orchestrator.StateMachine.Scheduler.Jobs;
 using Quartz;
 
 namespace Orchestrator.StateMachine.ActivitiesByEvent.PushDeliveryTimeout;
@@ -16,8 +16,8 @@ internal sealed class SendSmsDeliveryTimeoutEventActivity
     public SendSmsDeliveryTimeoutEventActivity(ILogger<SendSmsDeliveryTimeoutEventActivity> logger,
         ISchedulerFactory factory)
     {
-        _logger = logger;
-        _factory = factory;
+        this._logger = logger;
+        this._factory = factory;
     }
     
     public void Probe(ProbeContext context) => context.CreateScope(nameof(SendSmsDeliveryTimeoutEventActivity));
@@ -38,7 +38,9 @@ internal sealed class SendSmsDeliveryTimeoutEventActivity
             .ForJob(SendSmsDeliveryTimeoutEventJob.JobKey)
             .WithIdentity($"sms.delivery.timeout.{context.Saga.CommunicationId}")
             .UsingJobData(dataMap)
-            .StartAt(DateBuilder.FutureDate(context.Saga.SmsDeliveryTimeoutDays, IntervalUnit.Day))
+            // TODO restore
+            // .StartAt(DateBuilder.FutureDate(context.Saga.SmsDeliveryTimeoutDays, IntervalUnit.Day))
+            .StartAt(DateBuilder.FutureDate(1, IntervalUnit.Minute))
             .Build();
 
         var scheduler = await _factory.GetScheduler();

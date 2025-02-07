@@ -1,4 +1,4 @@
-namespace Orchestrator.StateMachine;
+namespace Orchestrator.StateMachine.Core;
 
 internal enum DeliveryChannel
 {

@@ -1,7 +1,8 @@
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
-using Orchestrator.StateMachine.Jobs;
+using Orchestrator.StateMachine.Core;
+using Orchestrator.StateMachine.Scheduler.Jobs;
 using Quartz;
 
 namespace Orchestrator.StateMachine.ActivitiesByEvent.CascadingCommunicationRequested;

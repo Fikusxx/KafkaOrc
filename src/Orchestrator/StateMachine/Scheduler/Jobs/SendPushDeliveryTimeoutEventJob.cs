@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
 using Quartz;
 
-namespace Orchestrator.StateMachine.Jobs;
+namespace Orchestrator.StateMachine.Scheduler.Jobs;
 
 internal sealed class SendPushDeliveryTimeoutEventJob : IJob
 {

@@ -6,7 +6,7 @@ using Orchestrator.StateMachine.ActivitiesByEvent.PushSend;
 using Push.Contracts;
 using Sms.Contracts;
 
-namespace Orchestrator.StateMachine;
+namespace Orchestrator.StateMachine.Core;
 
 internal sealed class CascadingCommunicationStateMachine : MassTransitStateMachine<CascadingCommunicationState>
 {

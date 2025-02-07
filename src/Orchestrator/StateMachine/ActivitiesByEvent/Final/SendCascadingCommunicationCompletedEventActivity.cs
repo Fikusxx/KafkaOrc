@@ -1,6 +1,9 @@
+using System.Net.Mime;
+using CloudNative.CloudEvents;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
+using Orchestrator.StateMachine.Core;
 
 namespace Orchestrator.StateMachine.ActivitiesByEvent.Final;
 
@@ -8,10 +11,10 @@ internal sealed class SendCascadingCommunicationCompletedEventActivity
     : IStateMachineActivity<CascadingCommunicationState>
 {
     private readonly ILogger<SendCascadingCommunicationCompletedEventActivity> _logger;
-    private readonly ITopicProducer<long, CascadingCommunicationCompletedEvent> _producer;
+    private readonly ITopicProducer<long, CloudEvent> _producer;
 
     public SendCascadingCommunicationCompletedEventActivity(ILogger<SendCascadingCommunicationCompletedEventActivity> logger,
-        ITopicProducer<long, CascadingCommunicationCompletedEvent> producer)
+        ITopicProducer<long, CloudEvent> producer)
     {
         this._logger = logger;
         this._producer = producer;
@@ -22,16 +25,18 @@ internal sealed class SendCascadingCommunicationCompletedEventActivity
 
     public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
 
-    public Task Execute(BehaviorContext<CascadingCommunicationState> context,
+    public async Task Execute(BehaviorContext<CascadingCommunicationState> context,
         IBehavior<CascadingCommunicationState> next)
     {
-        return SendEventAsync(context);
+        await SendEventAsync(context);
+        await next.Execute(context);
     }
 
-    public Task Execute<T>(BehaviorContext<CascadingCommunicationState, T> context,
+    public async Task Execute<T>(BehaviorContext<CascadingCommunicationState, T> context,
         IBehavior<CascadingCommunicationState, T> next) where T : class
     {
-        return SendEventAsync(context);
+        await SendEventAsync(context);
+        await next.Execute(context);
     }
 
     public async Task Faulted<TException>(BehaviorExceptionContext<CascadingCommunicationState, TException> context,
@@ -51,14 +56,25 @@ internal sealed class SendCascadingCommunicationCompletedEventActivity
     {
         _logger.LogInformation("Sending {EventName} for {CommunicationId}.",
             nameof(CascadingCommunicationCompletedEvent), context.Saga.CommunicationId);
-
+        
         var command = new CascadingCommunicationCompletedEvent
         {
             CommunicationId = context.Saga.CommunicationId,
             Success = context.Saga.Success,
             DeliveryChannel = (int)context.Saga.DeliveryChannel
         };
+        
+        // TODO fix meta params
+        var cloudEvent = new CloudEvent
+        {
+            Id = Guid.NewGuid().ToString(),
+            Type = "type",
+            Source = new Uri("https://cloudevents.io/"),
+            Time = DateTimeOffset.Now,
+            DataContentType = MediaTypeNames.Application.Json,
+            Data = command
+        };
 
-        return _producer.Produce(command.CommunicationId, command);
+        return _producer.Produce(command.CommunicationId, cloudEvent);
     }
 }

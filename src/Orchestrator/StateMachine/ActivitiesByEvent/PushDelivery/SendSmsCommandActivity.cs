@@ -1,8 +1,8 @@
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
+using Orchestrator.StateMachine.Core;
 using Push.Contracts;
-using Sms.Contracts;
 
 namespace Orchestrator.StateMachine.ActivitiesByEvent.PushDelivery;
 
@@ -22,11 +22,11 @@ internal sealed class SendSmsCommandActivity
     public void Probe(ProbeContext context) => context.CreateScope(nameof(SendSmsCommandActivity));
     public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
 
-    public Task Execute(BehaviorContext<CascadingCommunicationState, PushDeliveryEvent> context,
+    public async Task Execute(BehaviorContext<CascadingCommunicationState, PushDeliveryEvent> context,
         IBehavior<CascadingCommunicationState, PushDeliveryEvent> next)
     {
         _logger.LogInformation("Sending {CommandName} for {CommunicationId}.",
-            nameof(SendPushCommand), context.Saga.CommunicationId);
+            nameof(SendSmsCommand), context.Saga.CommunicationId);
 
         var command = new SendSmsCommand
         {
@@ -37,7 +37,8 @@ internal sealed class SendSmsCommandActivity
             Priority = context.Saga.SmsData.Priority,
         };
 
-        return _producer.Produce(command.SmsId, command);
+        await _producer.Produce(command.SmsId, command);
+        await next.Execute(context);
     }
 
     public async Task Faulted<TException>(
