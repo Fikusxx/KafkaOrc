@@ -14,43 +14,45 @@ internal static class StateMachineProducerRegistrationExtensions
         cfg.AddProducer<long, SendPushCommand>(options.Topic,
             options.ProducerConfig);
     }
-    
+
     public static void AddSendSmsCommandProducer(this IRiderRegistrationConfigurator cfg,
         ProducerOptions options)
     {
         cfg.AddProducer<long, SendSmsCommand>(options.Topic,
-            options.ProducerConfig);
+            options.ProducerConfig,
+            (_, producerCfg) =>
+            {
+                // TODO add cloud event serializer and wrap event
+                // producerCfg.SetValueSerializer();
+            });
     }
-    
+
     public static void AddPushSendTimeoutProducer(this IRiderRegistrationConfigurator cfg,
         ProducerOptions options)
     {
         cfg.AddProducer<long, PushSendTimeoutEvent>(options.Topic,
             options.ProducerConfig);
     }
-    
+
     public static void AddPushDeliveryTimeoutProducer(this IRiderRegistrationConfigurator cfg,
         ProducerOptions options)
     {
         cfg.AddProducer<long, PushDeliveryTimeoutEvent>(options.Topic,
             options.ProducerConfig);
     }
-    
+
     public static void AddSmsDeliveryTimeoutProducer(this IRiderRegistrationConfigurator cfg,
         ProducerOptions options)
     {
         cfg.AddProducer<long, SmsDeliveryTimeoutEvent>(options.Topic,
             options.ProducerConfig);
     }
-    
+
     public static void AddCommunicationCompletedProducer(this IRiderRegistrationConfigurator cfg,
         ProducerOptions options)
     {
         cfg.AddProducer<long, CloudEvent>(options.Topic,
             options.ProducerConfig,
-            (_, producerCfg) =>
-            {
-                producerCfg.SetValueSerializer(new CloudEventJsonSerializer());
-            });
+            (_, producerCfg) => { producerCfg.SetValueSerializer(new CloudEventJsonSerializer()); });
     }
 }

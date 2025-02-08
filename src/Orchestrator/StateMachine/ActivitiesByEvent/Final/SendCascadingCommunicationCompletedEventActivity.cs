@@ -61,20 +61,29 @@ internal sealed class SendCascadingCommunicationCompletedEventActivity
         {
             CommunicationId = context.Saga.CommunicationId,
             Success = context.Saga.Success,
-            DeliveryChannel = (int)context.Saga.DeliveryChannel
+            DeliveryChannel = GetDeliveryChannelAsString(context.Saga.DeliveryChannel),
+            CompletedAt = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
         };
         
-        // TODO fix meta params
         var cloudEvent = new CloudEvent
         {
             Id = Guid.NewGuid().ToString(),
-            Type = "type",
+            Type = "kaskad",
             Source = new Uri("https://cloudevents.io/"),
-            Time = DateTimeOffset.Now,
+            Time = DateTimeOffset.UtcNow,
             DataContentType = MediaTypeNames.Application.Json,
             Data = command
         };
 
         return _producer.Produce(command.CommunicationId, cloudEvent);
     }
+
+    private static string GetDeliveryChannelAsString(DeliveryChannel channel) =>
+        channel switch
+        {
+            DeliveryChannel.Push => "push",
+            DeliveryChannel.Sms  => "sms",
+            DeliveryChannel.None => "not_delivered",
+            _ => "not_delivered",
+        };
 }

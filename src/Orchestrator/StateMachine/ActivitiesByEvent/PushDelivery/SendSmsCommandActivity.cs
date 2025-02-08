@@ -10,13 +10,13 @@ internal sealed class SendSmsCommandActivity
     : IStateMachineActivity<CascadingCommunicationState, PushDeliveryEvent>
 {
     private readonly ILogger<SendSmsCommandActivity> _logger;
-    private readonly ITopicProducer<long, PushSendEvent> _producer;
+    private readonly ITopicProducer<long, SendSmsCommand> _producer;
 
     public SendSmsCommandActivity(ILogger<SendSmsCommandActivity> logger,
-        ITopicProducer<long, PushSendEvent> producer)
+        ITopicProducer<long, SendSmsCommand> producer)
     {
-        _logger = logger;
-        _producer = producer;
+        this._logger = logger;
+        this._producer = producer;
     }
 
     public void Probe(ProbeContext context) => context.CreateScope(nameof(SendSmsCommandActivity));

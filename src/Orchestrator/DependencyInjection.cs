@@ -12,8 +12,9 @@ public static class DependencyInjection
     {
         // TODO
         // add health checks
-        // add logging
+        // add logging and ensure logging is correct with MT's LogContext
         
+        // Migrations should be first to run.
         services.AddMigrations(configuration);
         services.AddScheduler(configuration);
         services.AddOrchestration(configuration);

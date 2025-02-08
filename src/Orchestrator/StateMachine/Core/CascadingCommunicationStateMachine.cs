@@ -2,7 +2,6 @@ using MassTransit;
 using Orchestrator.Contracts;
 using Orchestrator.StateMachine.ActivitiesByEvent.CascadingCommunicationRequested;
 using Orchestrator.StateMachine.ActivitiesByEvent.Final;
-using Orchestrator.StateMachine.ActivitiesByEvent.PushSend;
 using Push.Contracts;
 using Sms.Contracts;
 
@@ -42,8 +41,8 @@ internal sealed class CascadingCommunicationStateMachine : MassTransitStateMachi
             When(PushSendEvent,
                     filter => filter.Message.DeliveryStatus == 0)
                 .UpdateSagaWhenPushSendNotDelivered()
-                .Activity(x => x.OfType<SendSmsCommandActivity>())
-                .Activity(x => x.OfType<SendSmsDeliveryTimeoutEventActivity>())
+                // .Activity(x => x.OfType<SendSmsCommandActivity>())
+                // .Activity(x => x.OfType<SendSmsDeliveryTimeoutEventActivity>())
                 .TransitionTo(AwaitingSmsSend),
             When(PushSendEvent,
                     filter => filter.Message.DeliveryStatus == 1)
@@ -51,19 +50,19 @@ internal sealed class CascadingCommunicationStateMachine : MassTransitStateMachi
                 .TransitionTo(AwaitingPushDelivery),
             When(PushSendTimeoutEvent)
                 .UpdateSagaWhenPushSendTimedOut()
-                .Activity(x => x.OfType<ActivitiesByEvent.PushSendTimeout.SendSmsCommandActivity>())
-                .Activity(x => x.OfType<ActivitiesByEvent.PushSendTimeout.SendSmsDeliveryTimeoutEventActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushSendTimeout.SendSmsCommandActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushSendTimeout.SendSmsDeliveryTimeoutEventActivity>())
                 .TransitionTo(AwaitingSmsSend),
             When(PushDeliveryTimeoutEvent)
                 .UpdateSagaWhenPushDeliveryTimedOut()
-                .Activity(x => x.OfType<ActivitiesByEvent.PushDeliveryTimeout.SendSmsCommandActivity>())
-                .Activity(x => x.OfType<ActivitiesByEvent.PushDeliveryTimeout.SendSmsDeliveryTimeoutEventActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushDeliveryTimeout.SendSmsCommandActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushDeliveryTimeout.SendSmsDeliveryTimeoutEventActivity>())
                 .TransitionTo(AwaitingSmsSend),
             When(PushDeliveryEvent,
                     filter => filter.Message.DeliveryStatus == 0)
                 .UpdateSagaWhenPushDeliveryNotDelivered()
-                .Activity(x => x.OfType<ActivitiesByEvent.PushDelivery.SendSmsCommandActivity>())
-                .Activity(x => x.OfType<ActivitiesByEvent.PushDelivery.SendSmsDeliveryTimeoutEventActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushDelivery.SendSmsCommandActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushDelivery.SendSmsDeliveryTimeoutEventActivity>())
                 .TransitionTo(AwaitingSmsSend),
             When(PushDeliveryEvent,
                     filter => filter.Message.DeliveryStatus == 1)
@@ -74,19 +73,25 @@ internal sealed class CascadingCommunicationStateMachine : MassTransitStateMachi
         During(AwaitingPushDelivery,
             When(PushDeliveryTimeoutEvent)
                 .UpdateSagaWhenPushDeliveryTimedOut()
-                .Activity(x => x.OfType<ActivitiesByEvent.PushDeliveryTimeout.SendSmsCommandActivity>())
-                .Activity(x => x.OfType<ActivitiesByEvent.PushDeliveryTimeout.SendSmsDeliveryTimeoutEventActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushDeliveryTimeout.SendSmsCommandActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushDeliveryTimeout.SendSmsDeliveryTimeoutEventActivity>())
                 .TransitionTo(AwaitingSmsSend),
             When(PushDeliveryEvent,
                     filter => filter.Message.DeliveryStatus == 0)
                 .UpdateSagaWhenPushDeliveryNotDelivered()
-                .Activity(x => x.OfType<ActivitiesByEvent.PushDelivery.SendSmsCommandActivity>())
-                .Activity(x => x.OfType<ActivitiesByEvent.PushDelivery.SendSmsDeliveryTimeoutEventActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushDelivery.SendSmsCommandActivity>())
+                // .Activity(x => x.OfType<ActivitiesByEvent.PushDelivery.SendSmsDeliveryTimeoutEventActivity>())
                 .TransitionTo(AwaitingSmsSend),
             When(PushDeliveryEvent,
                     filter => filter.Message.DeliveryStatus == 1)
                 .UpdateSagaWhenPushDeliveryDelivered()
                 .TransitionTo(Final)
+        );
+
+        WhenEnter(AwaitingSmsSend,
+            activityCallback => activityCallback
+                .Activity(x => x.OfType<ActivitiesByEvent.SendSmsCommandActivity>())
+                .Activity(x => x.OfType<ActivitiesByEvent.SendSmsDeliveryTimeoutEventActivity>())
         );
 
         During(AwaitingSmsSend,

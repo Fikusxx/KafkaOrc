@@ -10,10 +10,10 @@ internal sealed class SendSmsCommandActivity
     : IStateMachineActivity<CascadingCommunicationState, PushSendEvent>
 {
     private readonly ILogger<SendSmsCommandActivity> _logger;
-    private readonly ITopicProducer<long, PushSendEvent> _producer;
+    private readonly ITopicProducer<long, SendSmsCommand> _producer;
 
     public SendSmsCommandActivity(ILogger<SendSmsCommandActivity> logger,
-        ITopicProducer<long, PushSendEvent> producer)
+        ITopicProducer<long, SendSmsCommand> producer)
     {
         this._logger = logger;
         this._producer = producer;

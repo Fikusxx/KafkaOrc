@@ -2,7 +2,6 @@ using MassTransit;
 using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
 using Orchestrator.StateMachine.Core;
-using Push.Contracts;
 
 namespace Orchestrator.StateMachine.ActivitiesByEvent.PushDeliveryTimeout;
 
@@ -10,10 +9,10 @@ internal sealed class SendSmsCommandActivity
     : IStateMachineActivity<CascadingCommunicationState, PushDeliveryTimeoutEvent>
 {
     private readonly ILogger<SendSmsCommandActivity> _logger;
-    private readonly ITopicProducer<long, PushSendEvent> _producer;
+    private readonly ITopicProducer<long, SendSmsCommand> _producer;
 
     public SendSmsCommandActivity(ILogger<SendSmsCommandActivity> logger,
-        ITopicProducer<long, PushSendEvent> producer)
+        ITopicProducer<long, SendSmsCommand> producer)
     {
         this._logger = logger;
         this._producer = producer;
