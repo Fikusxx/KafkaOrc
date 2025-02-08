@@ -47,7 +47,7 @@ internal static class DependencyInjection
                 rider.AddCommunicationCompletedProducer(stateMachineOptions
                     .CascadingCommunicationCompletedProducerOptions);
 
-                #region TBD
+                #region For testing purposes. TBD
 
                 rider.AddProducer<long, CascadingCommunicationRequestedEvent>("communication.requested",
                     new ProducerConfig { BootstrapServers = "localhost:9092" },

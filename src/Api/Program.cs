@@ -7,10 +7,11 @@ using Sms.Contracts;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", optional: true);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// TODO add yaml support
 
 builder.Services.AddInfrastructure(builder.Configuration);
 

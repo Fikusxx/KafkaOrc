@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
 using Orchestrator.StateMachine.Core;
 
-namespace Orchestrator.StateMachine.ActivitiesByEvent.CascadingCommunicationRequested;
+namespace Orchestrator.StateMachine.Activities;
 
 internal sealed class SendPushCommandActivity
     : IStateMachineActivity<CascadingCommunicationState, CascadingCommunicationRequestedEvent>

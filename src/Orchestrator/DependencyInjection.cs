@@ -10,7 +10,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // TODO
+        // TODO do stuff below
         // add health checks
         // add logging and ensure logging is correct with MT's LogContext
         

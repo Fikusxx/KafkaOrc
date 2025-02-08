@@ -5,40 +5,40 @@ using Orchestrator.StateMachine.Core;
 using Orchestrator.StateMachine.Scheduler.Jobs;
 using Quartz;
 
-namespace Orchestrator.StateMachine.ActivitiesByEvent.CascadingCommunicationRequested;
+namespace Orchestrator.StateMachine.Activities;
 
-internal sealed class SendPushSendTimeoutEventActivity
+internal sealed class SendPushDeliveryTimeoutEventActivity
     : IStateMachineActivity<CascadingCommunicationState, CascadingCommunicationRequestedEvent>
 {
-    private readonly ILogger<SendPushSendTimeoutEventActivity> _logger;
+    private readonly ILogger<SendPushDeliveryTimeoutEventActivity> _logger;
     private readonly ISchedulerFactory _factory;
 
-    public SendPushSendTimeoutEventActivity(ILogger<SendPushSendTimeoutEventActivity> logger, ISchedulerFactory factory)
+    public SendPushDeliveryTimeoutEventActivity(ILogger<SendPushDeliveryTimeoutEventActivity> logger,
+        ISchedulerFactory factory)
     {
         _logger = logger;
         _factory = factory;
     }
 
-    public void Probe(ProbeContext context) => context.CreateScope(nameof(SendPushSendTimeoutEventActivity));
+    public void Probe(ProbeContext context) => context.CreateScope(nameof(SendPushDeliveryTimeoutEventActivity));
     public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
 
-    public async Task Execute(
-        BehaviorContext<CascadingCommunicationState, CascadingCommunicationRequestedEvent> context,
+    public async Task Execute(BehaviorContext<CascadingCommunicationState, CascadingCommunicationRequestedEvent> context,
         IBehavior<CascadingCommunicationState, CascadingCommunicationRequestedEvent> next)
     {
         _logger.LogInformation("Scheduling {EventName} for {CommunicationId}.",
-            nameof(PushSendTimeoutEvent), context.Saga.CommunicationId);
+            nameof(PushDeliveryTimeoutEvent), context.Saga.CommunicationId);
 
         var dataMap = new JobDataMap
         {
-            { SendPushSendTimeoutEventJob.IdParameterName, context.Saga.CommunicationId }
+            { SendPushDeliveryTimeoutEventJob.IdParameterName, context.Saga.CommunicationId }
         };
 
         var trigger = TriggerBuilder.Create()
-            .ForJob(SendPushSendTimeoutEventJob.JobKey)
-            .WithIdentity($"push.send.timeout.{context.Saga.CommunicationId}")
+            .ForJob(SendPushDeliveryTimeoutEventJob.JobKey)
+            .WithIdentity($"push.delivery.timeout.{context.Saga.CommunicationId}")
             .UsingJobData(dataMap)
-            .StartAt(DateBuilder.FutureDate(context.Saga.PushSendTimeoutSeconds, IntervalUnit.Second))
+            .StartAt(DateBuilder.FutureDate(context.Saga.PushDeliveryTimeoutSeconds, IntervalUnit.Second))
             .Build();
 
         var scheduler = await _factory.GetScheduler();
