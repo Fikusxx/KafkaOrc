@@ -7,6 +7,9 @@ using Quartz;
 
 namespace Orchestrator.StateMachine.Activities;
 
+/// <summary>
+/// Activity to be executed upon triggering initial state machine state.
+/// </summary>
 internal sealed class SendPushDeliveryTimeoutEventActivity
     : IStateMachineActivity<CascadingCommunicationState, CascadingCommunicationRequestedEvent>
 {
@@ -16,8 +19,8 @@ internal sealed class SendPushDeliveryTimeoutEventActivity
     public SendPushDeliveryTimeoutEventActivity(ILogger<SendPushDeliveryTimeoutEventActivity> logger,
         ISchedulerFactory factory)
     {
-        _logger = logger;
-        _factory = factory;
+        this._logger = logger;
+        this._factory = factory;
     }
 
     public void Probe(ProbeContext context) => context.CreateScope(nameof(SendPushDeliveryTimeoutEventActivity));

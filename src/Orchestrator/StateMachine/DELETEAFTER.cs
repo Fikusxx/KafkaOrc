@@ -10,6 +10,7 @@ using Sms.Contracts;
 
 namespace Orchestrator.StateMachine;
 
+// TODO delete when testing is done
 internal sealed class CascadingCommunicationRequestedEvent2 : IAsyncSerializer<CascadingCommunicationRequestedEvent>
 {
     private static readonly JsonEventFormatter Formatter = new();

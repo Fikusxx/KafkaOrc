@@ -7,6 +7,9 @@ using Orchestrator.StateMachine.Core;
 
 namespace Orchestrator.StateMachine.Activities;
 
+/// <summary>
+/// Activity to be executed when state machine enters final state.
+/// </summary>
 internal sealed class SendCascadingCommunicationCompletedEventActivity
     : IStateMachineActivity<CascadingCommunicationState>
 {

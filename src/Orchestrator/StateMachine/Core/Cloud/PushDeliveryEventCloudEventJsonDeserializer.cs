@@ -4,7 +4,7 @@ using Push.Contracts;
 namespace Orchestrator.StateMachine.Core.Cloud;
 
 internal sealed class PushDeliveryEventCloudEventJsonDeserializer
-    : BaseCloudEventJsonSerializer<PushDeliveryEvent>,
+    : BaseCloudEventJsonDeserializer<PushDeliveryEvent>,
         IDeserializer<PushDeliveryEvent>
 {
     public PushDeliveryEvent Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)

@@ -22,8 +22,7 @@ internal static class StateMachineProducerRegistrationExtensions
             options.ProducerConfig,
             (_, producerCfg) =>
             {
-                // TODO add cloud event serializer and wrap event
-                // producerCfg.SetValueSerializer();
+                producerCfg.SetValueSerializer(new SendSmsCommandToCloudEventJsonSerializer());
             });
     }
 

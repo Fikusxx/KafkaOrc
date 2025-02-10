@@ -4,7 +4,7 @@ using Orchestrator.Contracts;
 namespace Orchestrator.StateMachine.Core.Cloud;
 
 internal sealed class CascadingCommunicationRequestedEventCloudEventJsonDeserializer
-    : BaseCloudEventJsonSerializer<CascadingCommunicationRequestedEvent>,
+    : BaseCloudEventJsonDeserializer<CascadingCommunicationRequestedEvent>,
         IDeserializer<CascadingCommunicationRequestedEvent>
 {
     public CascadingCommunicationRequestedEvent Deserialize(ReadOnlySpan<byte> data, bool isNull,

@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Orchestrator.Contracts;
 using Orchestrator.StateMachine.Core;
 using Orchestrator.StateMachine.Scheduler.Jobs;
-using Push.Contracts;
 using Quartz;
 
 namespace Orchestrator.StateMachine.Activities;
@@ -17,19 +16,12 @@ internal sealed class SendSmsDeliveryTimeoutEventActivity
     public SendSmsDeliveryTimeoutEventActivity(ILogger<SendSmsDeliveryTimeoutEventActivity> logger,
         ISchedulerFactory factory)
     {
-        _logger = logger;
-        _factory = factory;
+        this._logger = logger;
+        this._factory = factory;
     }
     
     public void Probe(ProbeContext context) => context.CreateScope(nameof(SendSmsDeliveryTimeoutEventActivity));
     public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
-
-    public async Task Faulted<TException>(
-        BehaviorExceptionContext<CascadingCommunicationState, PushDeliveryEvent, TException> context,
-        IBehavior<CascadingCommunicationState, PushDeliveryEvent> next) where TException : Exception
-    {
-        await next.Faulted(context);
-    }
 
     public async Task Execute(BehaviorContext<CascadingCommunicationState> context, IBehavior<CascadingCommunicationState> next)
     {

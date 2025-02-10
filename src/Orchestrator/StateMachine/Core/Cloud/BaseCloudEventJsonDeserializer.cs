@@ -3,7 +3,7 @@ using CloudNative.CloudEvents.SystemTextJson;
 
 namespace Orchestrator.StateMachine.Core.Cloud;
 
-internal abstract class BaseCloudEventJsonSerializer<T> where T : class
+internal abstract class BaseCloudEventJsonDeserializer<T> where T : class
 {
     private readonly ContentType _contentType = new(MediaTypeNames.Application.Json);
     private readonly JsonEventFormatter<T> _formatter = new();

@@ -7,6 +7,9 @@ using Quartz;
 
 namespace Orchestrator.StateMachine.Activities;
 
+/// <summary>
+/// Activity to be executed upon entering sms branch state machine state.
+/// </summary>
 internal sealed class SendPushSendTimeoutEventActivity
     : IStateMachineActivity<CascadingCommunicationState, CascadingCommunicationRequestedEvent>
 {
@@ -15,8 +18,8 @@ internal sealed class SendPushSendTimeoutEventActivity
 
     public SendPushSendTimeoutEventActivity(ILogger<SendPushSendTimeoutEventActivity> logger, ISchedulerFactory factory)
     {
-        _logger = logger;
-        _factory = factory;
+        this._logger = logger;
+        this._factory = factory;
     }
 
     public void Probe(ProbeContext context) => context.CreateScope(nameof(SendPushSendTimeoutEventActivity));

@@ -47,8 +47,9 @@ internal static class DependencyInjection
                 rider.AddCommunicationCompletedProducer(stateMachineOptions
                     .CascadingCommunicationCompletedProducerOptions);
 
+                // TODO delete when testing is done
                 #region For testing purposes. TBD
-
+                
                 rider.AddProducer<long, CascadingCommunicationRequestedEvent>("communication.requested",
                     new ProducerConfig { BootstrapServers = "localhost:9092" },
                     (_, producerCfg) =>

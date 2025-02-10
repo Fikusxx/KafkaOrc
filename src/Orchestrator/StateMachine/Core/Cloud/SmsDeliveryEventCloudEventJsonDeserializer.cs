@@ -4,7 +4,7 @@ using Sms.Contracts;
 namespace Orchestrator.StateMachine.Core.Cloud;
 
 internal sealed class SmsDeliveryEventCloudEventJsonDeserializer
-    : BaseCloudEventJsonSerializer<SmsDeliveryEvent>,
+    : BaseCloudEventJsonDeserializer<SmsDeliveryEvent>,
         IDeserializer<SmsDeliveryEvent>
 {
     public SmsDeliveryEvent Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)

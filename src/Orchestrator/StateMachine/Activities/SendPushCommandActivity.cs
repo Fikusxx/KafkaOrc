@@ -5,6 +5,9 @@ using Orchestrator.StateMachine.Core;
 
 namespace Orchestrator.StateMachine.Activities;
 
+/// <summary>
+/// Activity to be executed upon triggering initial state machine state.
+/// </summary>
 internal sealed class SendPushCommandActivity
     : IStateMachineActivity<CascadingCommunicationState, CascadingCommunicationRequestedEvent>
 {

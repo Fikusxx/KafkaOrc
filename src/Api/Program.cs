@@ -1,4 +1,5 @@
 using MassTransit;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Orchestrator;
 using Orchestrator.Contracts;
@@ -13,7 +14,7 @@ builder.Configuration.AddYamlFile($"appsettings.{builder.Environment.Environment
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration, builder.Host);
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -22,7 +23,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// TODO add health checks 
+app.MapHealthChecks("/healthz/ready", new HealthCheckOptions { AllowCachingResponses = true });
+app.MapGet("/healthz/live", () => Results.Ok());
 
 app.MapGet("communication.requested", async (
     [FromQuery] long id,

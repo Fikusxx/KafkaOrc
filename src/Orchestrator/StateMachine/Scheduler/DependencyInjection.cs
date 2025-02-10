@@ -14,13 +14,14 @@ internal static class DependencyInjection
         var schedulerOptions = configuration
             .GetSection(nameof(SchedulerOptions))
             .Get<SchedulerOptions>();
-        
+
         services.AddQuartz(opt =>
         {
             opt.SchedulerId = schedulerOptions!.SchedulerId;
             opt.SchedulerName = schedulerOptions.SchedulerName;
             opt.MaxBatchSize = schedulerOptions.MaxBatchSize;
-            opt.BatchTriggerAcquisitionFireAheadTimeWindow = TimeSpan.FromMilliseconds(schedulerOptions.BatchTriggerAcquisitionFireAheadTimeWindowMs);
+            opt.BatchTriggerAcquisitionFireAheadTimeWindow =
+                TimeSpan.FromMilliseconds(schedulerOptions.BatchTriggerAcquisitionFireAheadTimeWindowMs);
 
             opt.AddDurableJobs();
 

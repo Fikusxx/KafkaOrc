@@ -5,6 +5,9 @@ using Orchestrator.StateMachine.Core;
 
 namespace Orchestrator.StateMachine.Activities;
 
+/// <summary>
+/// Activity to be executed upon entering sms branch state machine state.
+/// </summary>
 internal sealed class SendSmsCommandActivity
     : IStateMachineActivity<CascadingCommunicationState>
 {

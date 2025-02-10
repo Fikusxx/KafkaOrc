@@ -13,6 +13,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="8.0.1" />
+      <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.2" />
       <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" Version="2.8.0" />
       <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.3.6" />
       <PackageReference Include="MassTransit.Kafka" Version="8.3.6" />
@@ -25,6 +27,10 @@
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
       <PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.1" />
       <PackageReference Include="Quartz.Serialization.SystemTextJson" Version="3.13.1" />
+      <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+      <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+      <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
+      <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
     </ItemGroup>
 
 </Project>
