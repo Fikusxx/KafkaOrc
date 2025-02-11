@@ -5,25 +5,25 @@ namespace Orchestrator.Contracts;
 public sealed record CascadingCommunicationRequestedEvent
 {
     /// <summary>
-    /// Globally unique id of communication
+    /// Globally unique id of communication.
     /// </summary>
     [JsonPropertyName("communication_id")]
     public required long CommunicationId { get; init; }
 
     /// <summary>
-    /// Timeout for push to be delivered to a client
+    /// Timeout for push to be delivered to a client.
     /// </summary>
     [JsonPropertyName("push_delivery_timeout_seconds")]
     public required int PushDeliveryTimeoutSeconds { get; init; }
 
     /// <summary>
-    /// Sms details
+    /// Sms details.
     /// </summary>
     [JsonPropertyName("sms_data")]
     public required SmsData SmsData { get; init; }
 
     /// <summary>
-    /// Push details
+    /// Push details.
     /// </summary>
     [JsonPropertyName("push_data")]
     public required PushData PushData { get; init; }

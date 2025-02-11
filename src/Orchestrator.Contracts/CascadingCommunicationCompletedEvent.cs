@@ -5,19 +5,19 @@ namespace Orchestrator.Contracts;
 public sealed record CascadingCommunicationCompletedEvent
 {
     /// <summary>
-    /// Globally unique id of communication
+    /// Globally unique id of communication.
     /// </summary>
     [JsonPropertyName("communication_id")]
     public required long CommunicationId { get; init; }
     
     /// <summary>
-    /// If Cascading Communication completed successfully
+    /// If Cascading Communication completed successfully.
     /// </summary>
     [JsonPropertyName("success_status")]
     public required bool Success { get; init; }
     
     /// <summary>
-    /// Which channel Cascading Communication was delivered with, if any
+    /// Which channel Cascading Communication was delivered with, if any.
     /// </summary>
     [JsonPropertyName("delivery_channel")]
     public required string DeliveryChannel { get; init; }

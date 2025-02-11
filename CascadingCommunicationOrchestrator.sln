@@ -5,6 +5,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{E9180873-0F11-4FC4-900B-664D9F3CBF3F}"
 	ProjectSection(SolutionItems) = preProject
 		get-started.md = get-started.md
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\Api\Api.csproj", "{1DE0FE38-C1E6-4C8E-AAD5-2B46A0BB8E95}"

@@ -87,10 +87,6 @@ internal static class DependencyInjection
 
                 #endregion
 
-                // add temp producers for testing
-                // rider.AddProducer<Guid, SendSmsEvent>("sms");
-                // rider.AddProducer<Guid, SmsStatusEvent>("sms-status");
-
                 rider.UsingKafka(stateMachineOptions.ClientConfig,
                     (ctx, cfg) =>
                     {
